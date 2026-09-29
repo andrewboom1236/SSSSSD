@@ -1,30 +1,36 @@
 import RPi.GPIO as GPIO
-class RWM_DAC:
-    def __init__(self, gpio_bits, pwm_frequency, dynamic_range, verbose = False):
-        self.gpio_bits  = gpio_bits
+class PWM_DAC:
+    def __init__(self, gpio_pin, pwm_frequency, dynamic_range, verbose = False):
+        self.gpio_pin  = gpio_pin
         self.pwm_frequency = pwm_frequency
         self.dynamic_range = dynamic_range
         self.verbose = verbose
 
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.gpio_bits, GPIO.OUT, initial = 0)
+        GPIO.setup(self.gpio_pin, GPIO.OUT, initial = 0)
+
+        self.pwm = GPIO.PWM(self.gpio_pin, self.pwm_frequency)
+        self.pwm.start(0)
     
     def deinit(self):
+        self.pwm.stop()
         GPIO.output(self.gpio_bits, 0)
         GPIO.cleanup()
+
     def voltage_to_number(self, voltage):
         if not (0.0 <= voltage <= self.dynamic_range):
             print("Напряжение чет многовато брат")
             print("установим наверн 0.0")
             return 0
-        return int(voltage / self.dynamic_range * 255)
-    def set_number(self, num):
-        a = [int(el) for el in bin(num)[2:].zfill(8)]
-        
-        GPIO.output(self.gpio_bits, a)
+        return int(voltage / self.dynamic_range * 100)
+
     def set_voltage(self, voltage):
-        self.set_number(self.voltage_to_number(voltage))
+        duty = self.voltage_to_number(voltage)
+        self.pwm.ChangeDutyCycle(duty)
+        if self.verbose:
+            print(voltage, "   ", duty)
 if __name__ == "__main__":
+    dac = None
     try:
         dac = PWM_DAC(12, 500, 3.290, True)
 
@@ -35,4 +41,5 @@ if __name__ == "__main__":
             except ValueError:
                 print("тупой ты сука уебок")
     finally:
-        dac.deinit()
+        if dac is not None:
+            dac.deinit()
