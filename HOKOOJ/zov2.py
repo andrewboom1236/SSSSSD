@@ -12,20 +12,23 @@ class R2R_DAC:
     def deinit(self):
         GPIO.output(self.gpio_bits, 0)
         GPIO.cleanup()
+    def voltage_to_number(self, voltage):
+        if not (0.0 <= voltage <= dynamic_range):
+            print("Напряжение чет многовато брат")
+            print("установим наверн 0.0")
+            return 0
+        return int(self.voltage / dynamic_range * 255)
+    def set_number(self,num):
+        a = [int(el) for el in bin(self.num)[2:].zfill(8)]
+        
+        GPIO.output(led, a)
+    def set_voltage(self, voltage):
+        self.set_number(self.voltage_to_number(voltage))
 
 led = [16, 20, 21, 25, 26, 17, 27, 22]
 GPIO.setup(led, GPIO.OUT)
 dynamic_range = 3.3
-def voltage_to_number(self, voltage):
-    if not (0.0 <= voltage <= dynamic_range):
-        print("Напряжение чет многовато брат")
-        print("установим наверн 0.0")
-        return 0
-    return int(self.voltage / dynamic_range * 255)
 
-def number_todac(self,um):
-    a = [int(el) for el in bin(self.num)[2:].zfill(8)]
-    GPIO.output(led, a)
 
 if __name__ == "__main__":
     try:
@@ -33,7 +36,7 @@ if __name__ == "__main__":
         while True:
             try:
                 voltage = float(input("напряжения сне в пиво капни"))
-                dac.voltage_to_number(voltage)
+                dac.set_voltage(voltage)
 
             except ValueError:
                 print("ну ты ебень внатуре")
