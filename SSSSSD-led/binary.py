@@ -13,18 +13,14 @@ def f(val):
     return [int(element) for element in bin(val)[2:].zfill(8)]
 sleep_time = 0.2
 while True:
-    if  GPIO.input(up) and GPIO.input(down):
-        num = 255
-        print(num, f(num))
-        time.sleep(sleep_time)
-    elif GPIO.input(up):
+    if GPIO.input(up):
         num += 1
         print(num, f(num))
         time.sleep(sleep_time)
-    elif GPIO.input(down):
+    if GPIO.input(down):
         num -= 1
         print(num, f(num))
         time.sleep(sleep_time)
-    if num < 0 or num > 255:
+    if num < 0 or num > 50:
         break
     GPIO.output(leds, f(num))
