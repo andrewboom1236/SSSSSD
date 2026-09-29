@@ -1,7 +1,8 @@
 import RPi.GPIO as GPIO
-class R2R_DAC:
-    def __init__(self, gpio_bits, dynamic_range, verbose = False):
+class RWM_DAC:
+    def __init__(self, gpio_bits, pwm_frequency, dynamic_range, verbose = False):
         self.gpio_bits  = gpio_bits
+        self.pwm_frequency = pwm_frequency
         self.dynamic_range = dynamic_range
         self.verbose = verbose
 
@@ -23,17 +24,15 @@ class R2R_DAC:
         GPIO.output(self.gpio_bits, a)
     def set_voltage(self, voltage):
         self.set_number(self.voltage_to_number(voltage))
-
-
 if __name__ == "__main__":
     try:
-        dac = R2R_DAC([16, 20, 21, 25, 26, 17, 27, 22], 3.183, True)
+        dac = PWM_DAC(12, 500, 3.290, True)
+
         while True:
             try:
-                voltage = float(input("напряжения сне в пиво капни"))
+                voltage = float(input("кентишка мой солнце дай напряга "))
                 dac.set_voltage(voltage)
-
             except ValueError:
-                print("ну ты ебень внатуре")
+                print("тупой ты сука уебок")
     finally:
         dac.deinit()
