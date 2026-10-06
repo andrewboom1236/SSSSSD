@@ -2,14 +2,14 @@ import pisinus as ps
 import zov2 as zov
 import time as t
 
-amp = 3.2
+amp = 3.0
 sig_freq = 10
 samp_freq = 1000
+gpio_bits = [16, 20, 21, 25, 26, 17, 27, 22]
 
 if __name__ == "__main__":
-    dac = None
+    dac = zov.R2R_DAC(gpio_bits, 3.183, False)
     try:
-        dac = zov.R2R_DAC(gpio_bits, amplitude)
         start = t.time()
 
         while True:
@@ -22,5 +22,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("ну liii ты")
     finally:
-        if dac is not None:
-            dac.deinit()
+        dac.deinit()
