@@ -33,7 +33,7 @@ class MCP:
 if __name__ == "__main__":
     dac = None
     try:
-        dac = MCP(dynamic_range = 5.11)
+        dac = MCP(dynamic_range = 5)
         while True:
             voltage = float(input("кентишка мой солнце дай напряга "))
             dac.set_voltage(voltage)
