@@ -6,3 +6,7 @@ def pipisinus(freq, time):
 
 def wait(samp_freq):
     t.sleep(1.0/ samp_freq)
+
+def triang(freq, time):
+    phase = (freq * time) % 1
+    return 1 - abs(2 * phase - 1)
